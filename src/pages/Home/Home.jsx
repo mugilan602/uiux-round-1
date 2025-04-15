@@ -6,6 +6,10 @@ const Home = () => {
     const [secondsLeft, setSecondsLeft] = useState(0);
     const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
     const [isTimerStarted, setIsTimerStarted] = useState(false);
+    const [lastBeepSecond, setLastBeepSecond] = useState(null);
+
+    // Initialize beep sound
+    const beepSound = new Audio('/beep.wav'); // Assumes beep.wav is in the public folder
 
     const calculateTimeLeft = (remainingSeconds) => {
         if (remainingSeconds <= 0) {
@@ -32,6 +36,7 @@ const Home = () => {
         setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
         setIsTimerStarted(false);
         setInputMinutes('');
+        setLastBeepSecond(null);
     };
 
     useEffect(() => {
@@ -40,13 +45,22 @@ const Home = () => {
                 const newSeconds = secondsLeft - 1;
                 setSecondsLeft(newSeconds);
                 setTimeLeft(calculateTimeLeft(newSeconds));
+
+                // Play beep sound for the last 3 seconds
+                if (newSeconds <= 3 && newSeconds > 0 && newSeconds !== lastBeepSecond) {
+                    beepSound.play().catch((error) => {
+                        console.error('Error playing beep sound:', error);
+                    });
+                    setLastBeepSecond(newSeconds);
+                }
             }, 1000);
 
             return () => clearTimeout(timer);
         } else if (secondsLeft === 0 && isTimerStarted) {
             setIsTimerStarted(false);
+            setLastBeepSecond(null);
         }
-    }, [secondsLeft, isTimerStarted]);
+    }, [secondsLeft, isTimerStarted, lastBeepSecond]);
 
     return (
         <div className="relative h-screen flex items-center justify-center">
