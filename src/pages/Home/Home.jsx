@@ -101,7 +101,7 @@ const Home = () => {
                         </span>
                     </h2>
 
-                    <h2 className={`text-4xl font-bold text-center text-gray-800 ${styles.iceberg}`}>
+                    <h2 className={`text-3xl font-bold text-center text-gray-800 ${styles.iceberg}`}>
                         Round 1: குறுக்கெழுத்து புதிர்கள்
                     </h2>
 
